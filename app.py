@@ -26,7 +26,7 @@ def home():
                 continue
             username, password = account.strip().split('|')
             
-            session_dir = './session/'
+            session_dir = './tmp/session/'
             if not os.path.exists(session_dir):
                 os.makedirs(session_dir)
             session_file = f'{session_dir}/{username}.json'
@@ -90,7 +90,7 @@ def home():
                     comment_text = comment_texts[i] if i < len(comment_texts) else "Default comment"
                     comment = client.media_comment(media_id, comment_text)
 # Define the directory for storing comment files
-                    comment_dir = os.path.join(os.getcwd(), 'data')
+                    comment_dir = os.path.join(os.getcwd(), '/tmp/data')
                     if not os.path.exists(comment_dir):
                         os.makedirs(comment_dir)
 
@@ -119,7 +119,7 @@ def home():
 
 @app.route('/download/<filename>', methods=['GET'])
 def download_file(filename):
-    directory = os.path.join(os.getcwd(), 'data')
+    directory = os.path.join(os.getcwd(), '/tmp/data')
     file_path = os.path.join(directory, filename)
     if not os.path.exists(file_path):
         return jsonify({"error": "File not found"}), 404
