@@ -14,18 +14,21 @@ def home():
     if request.method == 'GET':
         return render_template('index.html')
     elif request.method == 'POST':
-        credentials = request.form.get('credentials')
-        url_post = request.form.get('url_post')
-        comment_texts = request.form.get('comment_texts').split('\n')
+        try:
+            credentials = request.form.get('credentials')
+            url_post = request.form.get('url_post')
+            comment_texts = request.form.get('comment_texts').split('\n')
 
-        results = []
-        if credentials:  # Check if credentials is not empty
+            results = []
+
+            if not credentials or not url_post:
+                return jsonify({'error': 'No credentials or post URL provided'}), 400
+
             accounts = credentials.split('\n')
             for i, account in enumerate(accounts):
                 if '|' not in account:
                     continue
                 username, password = account.strip().split('|')
-
 
                 try:
                     client = Client()
@@ -57,7 +60,7 @@ def home():
                         comment_text = comment_texts[i] if i < len(comment_texts) else "Default comment"
                         comment = client.media_comment(media_id, comment_text)
                         comment_status = 'Comment success'
-                        comment_id = comment.dict()['pk']
+                        comment_id = comment.dict().get('pk', 'N/A')
                     except Exception as e:
                         comment_status = f'Failed: {str(e)}'
                         comment_id = 'N/A'
@@ -72,12 +75,11 @@ def home():
                     'status_comment': comment_status,
                     'comment_id': comment_id
                 })
-        else:
-            results.append({
-                'error': 'No credentials provided'
-            })
 
-        return jsonify(results=results)
+            return jsonify(results=results)
+
+        except Exception as e:
+            return jsonify({'error': f'An unexpected error occurred: {str(e)}'}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
