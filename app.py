@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, send_from_directory, render_template
+from flask import Flask, request, jsonify, render_template
 import os
 from instagrapi import Client
 from instagrapi.exceptions import (
@@ -14,9 +14,9 @@ def home():
     if request.method == 'GET':
         return render_template('index.html')
     elif request.method == 'POST':
-        credentials = request.form['credentials']
-        url_post = request.form['url_post']
-        comment_texts = request.form['comment_texts'].split('\n')  # Assuming comment_texts is a newline-separated input
+        credentials = request.form.get('credentials', '')
+        url_post = request.form.get('url_post', '')
+        comment_texts = request.form.get('comment_texts', '').split('\n')
 
         results = []
         accounts = credentials.split('\n')
@@ -24,11 +24,10 @@ def home():
             if '|' not in account:
                 continue
             username, password = account.strip().split('|')
-            
 
+            client = Client()
+            client.delay_range = [1, 5]
             try:
-                client = Client()
-                client.delay_range = [1, 5]
                 client.login(username, password)
                 login_status = 'Logged in successfully without sessions'
             except BadPassword:
@@ -48,13 +47,12 @@ def home():
             except LoginRequired:
                 login_status = 'Login failed - Login required.'
             except Exception as e:
-                    login_status = f'Login failed - {str(e)}'
+                login_status = f'Login failed - {str(e)}'
 
             # Comment logic
             if 'successfully' in login_status.lower():
                 try:
                     media_id = client.media_id(client.media_pk_from_url(url_post))
-                    # Ensure each account has a corresponding comment text
                     comment_text = comment_texts[i] if i < len(comment_texts) else "Default comment"
                     comment = client.media_comment(media_id, comment_text)
                     comment_status = 'Comment success'
@@ -77,4 +75,4 @@ def home():
         return jsonify(results=results)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)
