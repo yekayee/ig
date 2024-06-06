@@ -26,11 +26,12 @@ def home():
                     continue
                 username, password = account.strip().split('|')
 
-                client = Client()
-                client.delay_range = [1, 5]
+
                 try:
+                    client = Client()
+                    client.delay_range = [1, 5]
                     client.login(username, password)
-                    login_status = 'Logged in successfully without sessions'
+                    login_status = 'Logged in successfully'
                 except BadPassword:
                     login_status = 'Login failed - Bad password.'
                 except ReloginAttemptExceeded:
@@ -80,4 +81,4 @@ def home():
         return jsonify(results=results)
 
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run(debug=True)
