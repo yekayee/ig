@@ -22,10 +22,6 @@
                 <label for="comment_texts" class="form-label">Comment Texts:</label>
                 <textarea id="comment_texts" name="comment_texts" rows="3" class="form-control" placeholder="Comment for username1&#10;Comment for username2" required></textarea>
             </div>
-            <div class="mb-3">
-                <label for="comment_file" class="form-label">Filename for Comments:</label>
-                <input type="text" id="comment_file" name="comment_file" class="form-control" placeholder="urlcomment.txt" required>
-            </div>
             <button type="submit" class="btn btn-primary">Login and Comment</button>
         </form>
         <div id="results" class="mt-4"></div>
@@ -38,7 +34,6 @@
             
             // Clear previous results and download link
             document.getElementById('results').innerHTML = '';
-            document.getElementById('downloadLink').innerHTML = '';
 
             let formData = new FormData(this);
             fetch('/', {
@@ -82,8 +77,6 @@
                         icon: 'success'
                     });
 
-                    // Add download link
-                    downloadLinkDiv.innerHTML = `<a href="/download/${data.comment_file}" class="btn btn-success">Download Comments File</a>`;
                 } else {
                     resultsDiv.innerHTML = '<p>No results found.</p>';
                     // Display SweetAlert error message
