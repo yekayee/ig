@@ -25,14 +25,11 @@
             <button type="submit" class="btn btn-primary">Login and Comment</button>
         </form>
         <div id="results" class="mt-4"></div>
-        <div id="downloadLink" class="mt-3"></div>
     </div>
 
     <script>
         document.getElementById('loginForm').addEventListener('submit', function(event) {
             event.preventDefault();
-            
-            // Clear previous results and download link
             document.getElementById('results').innerHTML = '';
 
             let formData = new FormData(this);
@@ -69,16 +66,13 @@
                     table += `</tbody></table>`;
                     resultsDiv.innerHTML = table;
 
-                    // Display SweetAlert success message
                     Swal.fire({
                         title: 'Success',
                         html: 'Result will show on table below',
                         icon: 'success'
                     });
-
                 } else {
                     resultsDiv.innerHTML = '<p>No results found.</p>';
-                    // Display SweetAlert error message
                     Swal.fire({
                         title: 'Error',
                         text: 'No results found.',
@@ -87,7 +81,8 @@
                 }
             })
             .catch(error => {
-                // Display SweetAlert error message
+                console.error('Error:', error);
+                document.getElementById('results').innerHTML = '<p>An error occurred.</p>';
                 Swal.fire({
                     title: 'Error',
                     text: 'An error occurred while processing the request.',
