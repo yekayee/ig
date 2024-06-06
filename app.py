@@ -18,9 +18,6 @@ def home():
         url_post = request.form.get('url_post')
         comment_texts = request.form.get('comment_texts').split('\n')
 
-        if len(accounts) < len(comment_texts):
-            return jsonify({"error": "Not enough accounts for the provided comments"}), 400
-
         results = []
         if credentials:  # Check if credentials is not empty
             accounts = credentials.split('\n')
