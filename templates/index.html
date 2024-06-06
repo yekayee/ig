@@ -43,7 +43,6 @@
             .then(response => response.json())
             .then(data => {
                 let resultsDiv = document.getElementById('results');
-                let downloadLinkDiv = document.getElementById('downloadLink');
                 if (data.results && data.results.length > 0) {
                     let table = `<table class="table">
                         <thead>
