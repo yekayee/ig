@@ -29,7 +29,6 @@ def home():
 
                 try:
                     client = Client()
-                    client.delay_range = [1, 5]
                     client.login(username, password)
                     login_status = 'Logged in successfully'
                 except BadPassword:
