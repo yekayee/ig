@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, send_from_directory
 import os
 from instagrapi import Client
 from instagrapi.exceptions import (
@@ -18,6 +18,7 @@ def home():
             credentials = request.form.get('credentials')
             url_post = request.form.get('url_post')
             comment_texts = request.form.get('comment_texts').split('\n')
+            comment_file = request.form.get('comment_file')
 
             results = []
 
@@ -76,10 +77,20 @@ def home():
                     'comment_id': comment_id
                 })
 
-            return jsonify(results=results)
+            # Save comments to file
+            if comment_file:
+                with open(comment_file, 'w') as f:
+                    for result in results:
+                        f.write(f"{result['username']}: {result['status_comment']}\n")
+
+            return jsonify(results=results, comment_file=comment_file)
 
         except Exception as e:
             return jsonify({'error': f'An unexpected error occurred: {str(e)}'}), 500
+
+@app.route('/download/<filename>', methods=['GET'])
+def download(filename):
+    return send_from_directory(directory='.', filename=filename)
 
 if __name__ == '__main__':
     app.run(debug=True)
