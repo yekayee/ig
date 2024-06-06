@@ -119,8 +119,14 @@ def home():
 
 @app.route('/download/<filename>', methods=['GET'])
 def download_file(filename):
-    directory = os.path.join(os.getcwd(), 'data')  # Adjusted to the correct directory
-    return send_from_directory(directory=directory, path=filename, as_attachment=True)
+    directory = os.path.join(os.getcwd(), 'data')
+    file_path = os.path.join(directory, filename)
+    if not os.path.exists(file_path):
+        return jsonify({"error": "File not found"}), 404
+    try:
+        return send_from_directory(directory=directory, filename=filename, as_attachment=True)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
