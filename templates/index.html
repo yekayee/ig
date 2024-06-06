@@ -87,8 +87,6 @@
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
-                document.getElementById('results').innerHTML = '<p>An error occurred.</p>';
                 // Display SweetAlert error message
                 Swal.fire({
                     title: 'Error',
