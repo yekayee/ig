@@ -25,9 +25,9 @@ def home():
                 continue
             username, password = account.strip().split('|')
 
+            client = Client()
+            client.delay_range = [1, 5]
             try:
-                client = Client()
-                client.delay_range = [1, 5]
                 client.login(username, password)
                 login_status = 'Logged in successfully without sessions'
             except BadPassword:
