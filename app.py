@@ -14,9 +14,9 @@ def home():
     if request.method == 'GET':
         return render_template('index.html')
     elif request.method == 'POST':
-        credentials = request.form.get('credentials', '')
-        url_post = request.form.get('url_post', '')
-        comment_texts = request.form.get('comment_texts', '').split('\n')
+        credentials = request.form.get('credentials')
+        url_post = request.form.get('url_post')
+        comment_texts = request.form.get('comment_texts').split('\n')
 
         results = []
         accounts = credentials.split('\n')
@@ -25,9 +25,9 @@ def home():
                 continue
             username, password = account.strip().split('|')
 
-            client = Client()
-            client.delay_range = [1, 5]
             try:
+                client = Client()
+                client.delay_range = [1, 5]
                 client.login(username, password)
                 login_status = 'Logged in successfully without sessions'
             except BadPassword:
