@@ -25,7 +25,7 @@ def home():
                 if '|' not in account:
                     continue
                 username, password = account.strip().split('|')
-                
+
                 client = Client()
                 client.delay_range = [1, 5]
                 try:
