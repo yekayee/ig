@@ -74,7 +74,7 @@ def home():
                 'comment_id': comment_id
             })
 
-        return jsonify(results=results, comment_file=comment_file)
+        return jsonify(results=results)
 
 if __name__ == '__main__':
     app.run(debug=True)
