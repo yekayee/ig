@@ -27,69 +27,83 @@
         <div id="results" class="mt-4"></div>
     </div>
 
-    <script>
-        document.getElementById('loginForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            document.getElementById('results').innerHTML = '';
+<script>
+    document.getElementById('loginForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        document.getElementById('results').innerHTML = '';
 
-            let formData = new FormData(this);
-            fetch('/', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                let resultsDiv = document.getElementById('results');
-                if (data.results && data.results.length > 0) {
-                    let table = `<table class="table">
-                        <thead>
-                            <tr>
-                                <th>No</th>
-                                <th>Username</th>
-                                <th>Status Login</th>
-                                <th>Status Comment</th>
-                                <th>Comment ID</th>
-                            </tr>
-                        </thead>
-                        <tbody>`;
-                    
-                    data.results.forEach(result => {
-                        table += `<tr>
-                            <td>${result.no}</td>
-                            <td>${result.username}</td>
-                            <td>${result.status_login}</td>
-                            <td>${result.status_comment}</td>
-                            <td>${result.comment_id}</td>
-                        </tr>`;
-                    });
-
-                    table += `</tbody></table>`;
-                    resultsDiv.innerHTML = table;
-
-                    Swal.fire({
-                        title: 'Success',
-                        html: 'Result will show on table below',
-                        icon: 'success'
-                    });
-                } else {
-                    resultsDiv.innerHTML = '<p>No results found.</p>';
-                    Swal.fire({
-                        title: 'Error',
-                        text: 'No results found.',
-                        icon: 'error'
-                    });
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                document.getElementById('results').innerHTML = '<p>An error occurred.</p>';
+        let formData = new FormData(this);
+        fetch('/', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.error) {
                 Swal.fire({
                     title: 'Error',
-                    text: 'An error occurred while processing the request.',
+                    text: data.error,
                     icon: 'error'
                 });
+                return;
+            }
+
+            let resultsDiv = document.getElementById('results');
+            if (data.results && data.results.length > 0) {
+                let table = `<table class="table">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Username</th>
+                            <th>Status Login</th>
+                            <th>Status Comment</th>
+                            <th>Comment ID</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+                
+                data.results.forEach(result => {
+                    table += `<tr>
+                        <td>${result.no}</td>
+                        <td>${result.username}</td>
+                        <td>${result.status_login}</td>
+                        <td>${result.status_comment}</td>
+                        <td>${result.comment_id}</td>
+                    </tr>`;
+                });
+
+                table += `</tbody></table>`;
+                resultsDiv.innerHTML = table;
+
+                Swal.fire({
+                    title: 'Success',
+                    html: 'Result will show on table below',
+                    icon: 'success'
+                });
+            } else {
+                resultsDiv.innerHTML = '<p>No results found.</p>';
+                Swal.fire({
+                    title: 'Error',
+                    text: 'No results found.',
+                    icon: 'error'
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('results').innerHTML = '<p>An error occurred.</p>';
+            Swal.fire({
+                title: 'Error',
+                text: 'An error occurred while processing the request.',
+                icon: 'error'
             });
         });
-    </script>
+    });
+</script>
 </body>
 </html>
