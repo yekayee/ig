@@ -17,7 +17,6 @@ def home():
         credentials = request.form['credentials']
         url_post = request.form['url_post']
         comment_texts = request.form['comment_texts'].split('\n')  # Assuming comment_texts is a newline-separated input
-        comment_file = request.form['comment_file']
 
         results = []
         accounts = credentials.split('\n')
